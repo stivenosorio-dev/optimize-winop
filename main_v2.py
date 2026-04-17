@@ -81,9 +81,11 @@ def is_admin() -> bool:
 def run_cmd(cmd, shell: bool = True) -> tuple[int, str]:
     """Ejecuta un comando y retorna (código_retorno, salida)."""
     try:
+        flags = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
         result = subprocess.run(
             cmd, shell=shell, capture_output=True, text=True,
-            timeout=120, encoding="utf-8", errors="ignore"
+            timeout=120, encoding="utf-8", errors="ignore",
+            creationflags=flags
         )
         return result.returncode, (result.stdout + result.stderr).strip()
     except subprocess.TimeoutExpired:
